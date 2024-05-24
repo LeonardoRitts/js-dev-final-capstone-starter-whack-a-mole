@@ -39,12 +39,12 @@ function randomInteger(min, max) {
  *
  */
 function setDelay(difficulty) {
-  if (difficulty === "easy") {
-    return 1500;
+  if (difficulty === "hard") {
+    return randomInteger(600, 1200);
   } else if (difficulty === "normal") {
     return 1000;
   } else {
-    return randomInteger(600, 1200);
+    return 1500;
   }
 }
 
@@ -63,18 +63,16 @@ function setDelay(difficulty) {
  * chooseHole(holes) //> returns one of the 9 holes that you defined
  */
 function chooseHole(holes) {
-  //Generate random number to give it to a hole
-  let holeNumber = randomInteger(0, 8);
-  //Use random number to pick a hole
-  const hole = holes[holeNumber];
-  //if the hole is the last one, go again
-  if (hole === lastHole) {
-    return chooseHole(holes);
-    //otherwise, keep track of the last hole and return the new one
-  } else {
-    lastHole = hole;
-    return hole;
+  let max = holes.length - 1;
+  if (lastHole != -1) {
+    max--;
   }
+  let anotherHole = randomInteger(0, max);
+  if (lastHole != -1 && anotherHole >= lastHole) {
+    anotherHole++;
+  }
+  lastHole = anotherHole;
+  return holes[anotherHole];
 }
 
 /**
@@ -135,9 +133,9 @@ function showAndHide(hole, delay) {
   toggleVisibility(hole);
 
   const timeoutID = setTimeout(() => {
-    toggleVisibility(hole, delay);
+    toggleVisibility(hole);
     gameOver();
-  }, 0);
+  }, delay);
   return timeoutID;
 }
 
@@ -236,6 +234,7 @@ function setEventListeners() {
  */
 function setDuration(duration) {
   time = duration;
+  timerDisplay.textContent = time;
   return time;
 }
 
